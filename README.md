@@ -15,15 +15,12 @@ npm run dev
 
 O projeto estará rodando em http://localhost:5173/cadastro
 
-## Executar com Docker
+## Executar os testes com Playwright
 
-É necessário ter o Docker instalado e em execução. O Node.js não precisa estar instalado na máquina: a imagem compila o projeto e serve os arquivos estáticos.
+Com Node.js e Google Chrome instalados, rode:
 
 ```bash
-git clone https://github.com/lucasNBS/oficina-playwright.git
-cd oficina-playwright
-docker build -t oficina-playwright .
-docker run -p 5173:80 oficina-playwright
+npm run test:e2e
 ```
 
-O projeto estará rodando em http://localhost:5173/cadastro
+O Playwright inicia o servidor Vite automaticamente na porta 5173. Para abrir a interface de execução dos testes, use `npm run test:e2e:ui`.
