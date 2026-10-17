@@ -2,7 +2,7 @@
 
 Projeto React + Vite + TypeScript com React Router, React Hook Form, Zod e Tailwind CSS feito como parte da oficina de testes com Playwright.
 
-O usuário simula um cadastro no navegador: um envio válido abre a página inicial com a mensagem “Conta criada com sucesso”, um erro na validação resulta em erros que são retornados ao usuário. Não há API nem persistência de dados.
+O formulário valida os dados e simula um envio assíncrono no navegador. Use `cadastrado@example.com` para ver o erro “Email já cadastrado.”; os demais emails válidos levam à página de sucesso. Não há backend nem persistência de dados. Durante o envio, o botão fica desabilitado.
 
 ## Executar com Node.js
 
@@ -23,4 +23,4 @@ Com Node.js e Google Chrome instalados, rode:
 npm run test:e2e
 ```
 
-O Playwright inicia o servidor Vite automaticamente na porta 5173. Para abrir a interface de execução dos testes, use `npm run test:e2e:ui`.
+O Playwright inicia o servidor Vite automaticamente na porta 5173. Os testes usam o fluxo simulado da própria aplicação, sem interceptar requisições. Para abrir a interface de execução dos testes, use `npm run test:e2e:ui`.
