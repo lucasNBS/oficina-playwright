@@ -60,8 +60,8 @@ export function CadastroPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-12">
-      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-sm sm:p-10">
+    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-6 sm:py-12">
+      <section className="w-full max-w-md rounded-2xl bg-white p-6 shadow-sm sm:p-10">
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
           Criar conta
         </h1>
@@ -78,7 +78,7 @@ export function CadastroPage() {
             }
             void handleSubmit(submit, () => setSubmitError(null))(event);
           }}
-          className="mt-8 space-y-5"
+          className="mt-6 space-y-4 sm:mt-8 sm:space-y-5"
         >
           <Input
             id="nome"
