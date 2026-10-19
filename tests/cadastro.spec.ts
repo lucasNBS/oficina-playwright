@@ -120,4 +120,28 @@ test.describe("tela de cadastro", () => {
       page.getByRole("button", { name: "Criar conta" }),
     ).toBeEnabled();
   });
+
+  test("mostra erro 500 quando backend estiver fora", async ({ page }) => {
+    await preencherCadastro(page, `ana-${crypto.randomUUID()}@example.com`);
+    await page.route("**/api/cadastro", async (route) => {
+      route.fulfill({
+        status: 500,
+        contentType: "application/json",
+        body: JSON.stringify({
+          message: "Erro ao cadastrar. Tente novamente.",
+        }),
+      });
+    });
+    await page.getByRole("button", { name: "Criar conta" }).click();
+
+    await expect(page).toHaveURL(/\/cadastro$/);
+    await expect(
+      page
+        .getByRole("alert")
+        .filter({ hasText: "Erro ao cadastrar. Tente novamente." }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Criar conta" }),
+    ).toBeEnabled();
+  });
 });

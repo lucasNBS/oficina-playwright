@@ -1,11 +1,13 @@
 import { z } from "zod";
 
-const cadastroSchema = z.object({
-  nome: z.string().trim().min(1),
-  email: z.email(),
-  senha: z.string().min(8),
-  confirmarSenha: z.string(),
-}).refine((dados) => dados.senha === dados.confirmarSenha);
+const cadastroSchema = z
+  .object({
+    nome: z.string().trim().min(1),
+    email: z.email(),
+    senha: z.string().min(8),
+    confirmarSenha: z.string(),
+  })
+  .refine((dados) => dados.senha === dados.confirmarSenha);
 
 const emailsCadastrados = new Set(["cadastrado@example.com"]);
 
@@ -56,6 +58,7 @@ export async function cadastroHandler(req, res) {
       return;
     }
     console.error("Erro ao cadastrar usuário:", error);
-    if (!res.headersSent) responder(res, 500, { message: "Erro ao cadastrar. Tente novamente." });
+    if (!res.headersSent)
+      responder(res, 500, { message: "Erro ao cadastrar. Tente novamente." });
   }
 }
