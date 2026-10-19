@@ -9,6 +9,7 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
   },
+  reporter: "html",
   projects: [
     {
       name: "chrome",
