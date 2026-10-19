@@ -19,7 +19,6 @@ const cadastroSchema = z
 
 type CadastroInput = z.input<typeof cadastroSchema>;
 type CadastroOutput = z.output<typeof cadastroSchema>;
-const emailJaCadastrado = "cadastrado@example.com";
 
 export function CadastroPage() {
   const navigate = useNavigate();
@@ -45,15 +44,21 @@ export function CadastroPage() {
     setSubmitError(null);
 
     try {
-      // Simula o tempo de resposta do cadastro para a oficina.
-      await new Promise<void>((resolve) => setTimeout(resolve, 800));
+      const response = await fetch("/api/cadastro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      if (data.email.toLowerCase() === emailJaCadastrado) {
-        setSubmitError("Email já cadastrado.");
+      if (!response.ok) {
+        const error: { message?: string } = await response.json();
+        setSubmitError(error.message ?? "Erro ao cadastrar. Tente novamente.");
         return;
       }
 
       navigate("/");
+    } catch {
+      setSubmitError("Erro ao cadastrar. Tente novamente.");
     } finally {
       submitting.current = false;
     }
