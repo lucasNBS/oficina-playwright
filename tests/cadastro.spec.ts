@@ -1,7 +1,21 @@
 import { Page, expect, test } from "@playwright/test";
 
-async function preencherCadastro(page: Page, email: string) {
-  await page.getByLabel("Nome").fill("Ana Silva");
+const NOMES = ["Ana", "Carlos", "Mariana", "Pedro", "Julia", "Lucas", "Beatriz", "Rafael"];
+const SOBRENOMES = ["Silva", "Santos", "Oliveira", "Costa", "Pereira", "Lima", "Almeida", "Rocha"];
+
+function pick<T>(list: T[]): T {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function gerarUsuario() {
+  const nome = `${pick(NOMES)} ${pick(SOBRENOMES)}`;
+  const slug = nome.toLowerCase().replace(" ", "-");
+  const email = `${slug}-${crypto.randomUUID().slice(0, 8)}@example.com`;
+  return { nome, email };
+}
+
+async function preencherCadastro(page: Page, nome: string, email: string) {
+  await page.getByLabel("Nome").fill(nome);
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Senha", { exact: true }).fill("senha1234");
   await page.getByLabel("Confirmar senha").fill("senha1234");
@@ -13,7 +27,8 @@ test.describe("tela de cadastro", () => {
   });
 
   test("cria a conta com dados válidos", async ({ page }) => {
-    await preencherCadastro(page, `ana-${crypto.randomUUID()}@example.com`);
+    const { nome, email } = gerarUsuario();
+    await preencherCadastro(page, nome, email);
 
     const response = page.waitForResponse((response) =>
       response.url().endsWith("/api/cadastro"),
@@ -64,7 +79,8 @@ test.describe("tela de cadastro", () => {
   });
 
   test("mostra os erros para email e senhas inválidas", async ({ page }) => {
-    await page.getByLabel("Nome").fill("Ana Silva");
+    const { nome } = gerarUsuario();
+    await page.getByLabel("Nome").fill(nome);
     await page.getByLabel("Email").fill("email-invalido");
     await page.getByLabel("Senha", { exact: true }).fill("123");
 
@@ -85,8 +101,9 @@ test.describe("tela de cadastro", () => {
   });
 
   test("mostra o erro quando as senhas não batem", async ({ page }) => {
-    await page.getByLabel("Nome").fill("Ana Silva");
-    await page.getByLabel("Email").fill("ana@example.com");
+    const { nome, email } = gerarUsuario();
+    await page.getByLabel("Nome").fill(nome);
+    await page.getByLabel("Email").fill(email);
     await page.getByLabel("Senha", { exact: true }).fill("senha1234");
     await page.getByLabel("Confirmar senha").fill("outra1234");
 
@@ -105,7 +122,8 @@ test.describe("tela de cadastro", () => {
   });
 
   test("mostra erro de email cadastrado pelo backend", async ({ page }) => {
-    await preencherCadastro(page, "cadastrado@example.com");
+    const { nome } = gerarUsuario();
+    await preencherCadastro(page, nome, "cadastrado@example.com");
     const response = page.waitForResponse((response) =>
       response.url().endsWith("/api/cadastro"),
     );
@@ -122,7 +140,8 @@ test.describe("tela de cadastro", () => {
   });
 
   test("mostra erro 500 quando backend estiver fora", async ({ page }) => {
-    await preencherCadastro(page, `ana-${crypto.randomUUID()}@example.com`);
+    const { nome, email } = gerarUsuario();
+    await preencherCadastro(page, nome, email);
     await page.route("**/api/cadastro", async (route) => {
       route.fulfill({
         status: 500,
